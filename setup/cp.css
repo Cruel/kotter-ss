@@ -1,0 +1,17 @@
+#wrapper {
+	width: 600px;
+}
+
+form label {
+	float: left;
+	clear: left;
+	height: 30px;
+}
+form input, form select {
+	float: right;
+	clear: right;
+	height: 30px;
+}
+
+tbody tr:nth-child(odd){ background-color:#ccc; }
+tbody tr:nth-child(even){ background-color:#fff; }

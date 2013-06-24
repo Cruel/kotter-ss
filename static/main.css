@@ -1,0 +1,187 @@
+
+/* =====  CSS reset  ===== */
+
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, font, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td { margin: 0; padding: 0; border: 0; outline: 0; font-size: 100%; vertical-align: baseline; background: transparent; }
+ol, ul { list-style: none; }
+blockquote, q { quotes: none; }
+blockquote:before, blockquote:after,
+q:before, q:after { content: ''; content: none; }
+/* remember to define focus styles! */
+:focus { outline: 0; }
+/* remember to highlight inserts somehow! padding: 9px 17px 9px 17px; */
+ins { text-decoration: none; }
+del { text-decoration: line-through; }
+/* tables still need 'cellspacing="0"' in the markup */
+table { border-collapse: collapse; }
+*, * focus {
+	outline: none;
+	margin: 0;
+	padding: 0;
+}
+textarea { overflow: auto; }
+textarea, input { font-family: Arial, Helvetica, sans-serif; font-size: 11px; }
+button, input[type=submit] { font-family: Arial, Helvetica, sans-serif; }
+
+img { border: 0; }
+ul { list-style: none; margin: 0; padding: 0; }
+p { margin: 0; padding: 0; }
+:focus { outline: 0; }
+a { text-decoration: none; color: #2b6893; }
+
+.normal { font-style: normal; }
+.normalFont { font-style: normal; font-weight: normal; }
+
+input::-moz-focus-inner /*Remove button padding in FF*/
+{ 
+    border: 0;
+    padding: 0;
+}
+
+button::-moz-focus-inner {
+    padding: 0;
+    border: 0
+}
+
+a.button::-moz-focus-inner /*Remove button padding in FF*/
+{ 
+    border: 0;
+    padding: 0;
+}
+
+
+
+body { margin: 0; padding: 0; font-size: 12px; color: #424242; font-family: Arial, Helvetica, sans-serif; line-height: 20px; /*min-height: 100%;*/ position: relative; }
+
+.formhead { background: #efefef url(leftNavBg.png) repeat-x; height: 38px; border-top: 1px solid #d5d5d5; border-bottom: 1px solid #d5d5d5; position: relative; }
+
+.fix { clear: both; }
+
+button, .button { font-size: 10px; font-weight: bold; text-transform: uppercase; padding: 5px 12px 6px 12px; cursor: pointer; font-family: Arial, Helvetica, sans-serif; line-height: 12px; }
+
+.iUser { background: url(user.png) no-repeat 12px; }
+
+.blueBtn { background: url(blueBtn.png) repeat-x 0 0; border: 1px solid #3581c1; color: #fff; }
+.blueBtn:hover { background-position: 0 -25px; }
+.blueBtn:active { background-position: 0 -50px; }
+
+.mainForm label { margin-right: 0px; display: block; float:left; padding: 4px 10px; }
+.mainForm input {
+	background: #fff;
+	width: 95%;
+	border: 1px solid #d5d5d5;
+	padding: 5px;
+	font-size: 11px;
+	font-family: Arial, Helvetica, sans-serif;
+}
+.mainForm input:hover{ background: #fcfcfc; border: 1px solid #d1d1d1; }
+.mainForm input:focus{ border: 1px solid #bbc1c9; background: #fff; }
+
+.submitForm { float: right; margin: 0 28px 0 14px; }
+
+
+.loginWrapper { width: 382px; margin: 8px auto 0 auto; text-align: center; }
+.loginPanel { width: 380px; margin-top: 30px; background: #fafafa; border: 1px solid #d5d5d5; border-top: 0; text-align: left; }
+.loginLogo {}
+.loginPanel h5 { font-weight: normal; padding: 9px 12px 9px 35px; float: left; }
+
+.loginPanel label { width: 105px; }
+.loginInput { width: 230px; float: left; }
+.loginRow { border-top: 1px solid #e7e7e7; padding: 15px 0; position: relative; }
+/*.loginRow .submitForm { margin: 0 28px 0 14px; }*/
+.loginRow .forgot { margin-top: 0; }
+.loginRow:first-child { border-top: none; }
+
+.backTo a:hover { background: #212121; }
+.backTo span { padding: 8px 14px 8px 8px; display: block; float: left; }
+.backTo img { margin: 13px 2px 11px 14px; float: left; display: block; }
+.backTo a { float: left; color: #eeeeee; font-size: 11px; border-right: 1px solid #2F2F2F; border-left: 1px solid #2F2F2F; }
+
+
+h1, h2, h3, h4, h5, h6, ul.tabs li a, .leftNav ul li a, .stats ul li span, .userLink, .errorPage p, .ui-dialog .ui-dialog-title { font-family: 'Cuprum', sans-serif; font-weight: normal; }
+h1 { font-size: 24px; }
+h2 { font-size: 22px; }
+h3 { font-size: 20px; }
+h4 { font-size: 18px; }
+h5 { font-size: 16px; }
+h6 { font-size: 14px; }
+
+.noborder { border: none!important; }
+
+.errorlist, .success {
+	width: 380px;
+	margin: 0 auto;
+	text-align: left;
+	padding-top:25px;
+	color:#900;
+}
+.success {
+	color: green;
+}
+.errorlist ul {
+	margin-left: 25px;
+	list-style-type:circle;
+}
+
+label.error {
+	position: absolute;
+	width: 240px;
+	color: #600;
+}
+input.error { border: 1px dashed #F88;}
+input.error:hover, input.error:focus { border: 1px dashed #FAA;}
+select.error { outline: 1px dashed #F88;}
+
+#terms {
+	width: auto;
+	margin: 6px 0 0 12px;
+}
+#terms.error {
+	
+}
+#termslabel{
+	float:right;
+	width:320px;
+	padding: 4px 5px;
+}
+
+#loading {
+	display: none;
+	background: #fff;
+	position: absolute;
+	text-align: center;
+	height: 80px;
+	width: 150px;
+	left: 50%;
+	top: 50%;
+	margin: -40px 0 0 -75px;
+	border: 1px solid #BBB;
+	border-radius: 5px;
+	-webkit-box-shadow: 4px 3px 5px rgba(50, 50, 50, 0.5);
+	-moz-box-shadow:    4px 3px 5px rgba(50, 50, 50, 0.5);
+	box-shadow:         4px 3px 5px rgba(50, 50, 50, 0.5);
+}
+#loading img {
+	width:50px;
+}
+
+.paymethod {
+	width: 360px;
+}
+
+#eft {
+	display: none;
+}
+
+#type {
+	float: right;
+	width: 200px;
+	margin: 8px 8px;
+}
