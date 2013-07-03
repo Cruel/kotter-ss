@@ -43,13 +43,13 @@ $(function(){
 
 	// PAYMENT FORM
 
-	$("#type").change(function(){
+	$("#paymenttype").change(function(){
 		$(".paymethod").slideUp("fast");
 		$("#"+$(this).val()).delay("fast").slideDown("fast");
 	});
 
 	jQuery.validator.addMethod("payment", function(value, element) {
-		return ($(element).parents("#"+$("#type").val()).length == 1);
+		return ($(element).parents("#"+$("#paymenttype").val()).length == 1);
 	}, "This field is required.");
 
 	jQuery.validator.addMethod("agency", function(value, element) {
@@ -86,5 +86,9 @@ $(function(){
 	});
 
 	// $("#mobileprovider").rules("add", "mobileprovider");
+
+	if (defaultplan) {
+		$("#plan").val(defaultplan);
+	}
 
 });

@@ -13,13 +13,14 @@ $api = new AnchorAPI();
 $tran = new umTransaction();
 
 function processPayment() {
-	global $db, $mail, $api, $tran, $user, $support, $upgrade;
+	global $db, $mail, $api, $tran, $user, $support, $upgrade, $plan;
 
 
 	if($user['paid'] || $tran->Process()){
-		// file_put_contents("test.txt", var_export($tran, TRUE));
-		$db->exec('UPDATE users SET paid=1 WHERE id='.$user['id']);
+		$db->setUserPlan($user['id'], $plan);
 		if (isset($upgrade)){
+			// Broken API - Commented Out
+			// $api->upgradeOrganization($user['organization_id'], $plan);
 			$mail->setEmailFile("upgrade", array(
 				"firstname" => $user['firstname'],
 				"lastname" => $user['lastname']
@@ -28,7 +29,7 @@ function processPayment() {
 			$success = "<h3>Success!</h3>Your account has been upgraded! You may now log in <a href=\"http://ss.kotter.net/\">here</a>.<br><br>Redirecting in 8 seconds...";
 		} else {
 			$pass = MyPDO::genRandPassword();
-			$apiorg = $api->createOrganization($user['agency'], $user['email']);
+			$apiorg = $api->createOrganization($user['agency'], $user['email'], $plan);
 			if ($apiorg){
 				$apiuser = $api->createUser($apiorg['result']['id'], $user['firstname'], $user['lastname'], $user['email'], $pass, $user['mobile_provider_id'], $user['mobile']);
 				if ($apiuser){
@@ -40,7 +41,7 @@ function processPayment() {
 						"password" => $pass
 					));
 					$mail->sendTo($user['email']);
-					$success = "<h3>Success!</h3>Your account has been created and password has been emailed to you. Please log in and change your password <a href=\"http://ss.kotter.net/\">here</a>.<br><br>Redirecting in 8 seconds...";
+					$success = "<h3>Success!</h3>Your account has been created and password has been emailed to you. Please log in <a href=\"http://ss.kotter.net/\">here</a>.<br><br>Redirecting in 8 seconds...";
 				} else {
 					$error = "<h3>Sorry.</h3>There was a problem creating your user: \"".$api->errorMsg()."\" ".$support;
 				}
@@ -73,12 +74,12 @@ function processPayment() {
 	die(json_encode($json));
 }
 
-// print_r($_POST);
 extract($_POST, EXTR_SKIP);
 
 if (isset($id, $verify) && $db->verifyUser($id, $verify)){
 
 	$user = $db->getUser($id);
+	$plan = (int)$plan;
 
 	$tran->key        = PAY_KEY;
 	
@@ -87,7 +88,12 @@ if (isset($id, $verify) && $db->verifyUser($id, $verify)){
 	$tran->testmode   = PAY_TESTMODE;
 	$tran->cardauth   = 1;
 
-	$tran->amount= "20.00";
+	$amount = array(
+		1 => "20.00",
+		2 => "50.00",
+		3 => "99.00",
+	);
+	$tran->amount= $amount[$plan];
 	$tran->invoice= $user['id'];
 
 	$tran->custemail  = $user['email'];
@@ -100,8 +106,8 @@ if (isset($id, $verify) && $db->verifyUser($id, $verify)){
 
 	$tran->description= "Online Store & Share Order";
 
-	if (isset($type, $card, $cardholder, $street, $zip, $cvv2, $exp_month, $exp_year)
-			&& $type == "cc"){
+	if (isset($paymenttype, $card, $cardholder, $street, $zip, $cvv2, $exp_month, $exp_year)
+			&& $paymenttype == "cc"){
 		$tran->command    = "cc:sale";
 		$tran->card       = $card;
 		$tran->exp        = $exp_month.$exp_year;
@@ -110,8 +116,8 @@ if (isset($id, $verify) && $db->verifyUser($id, $verify)){
 		$tran->zip        = $zip;
 		$tran->cvv2       = $cvv2;
 		processPayment($tran);
-	} else if (isset($type, $routing, $account, $ssn)
-			&& $type == "eft") {
+	} else if (isset($paymenttype, $routing, $account, $ssn)
+			&& $paymenttype == "eft") {
 		$tran->command = "check:sale";
 		$tran->routing = $routing;
 		$tran->account = $account;
@@ -121,7 +127,7 @@ if (isset($id, $verify) && $db->verifyUser($id, $verify)){
 	}
 
 } else {
-	echo "Failed to verify email.";
+	$error = "<h3>Failed to verify email.</h3>";
 }
 
 ?>

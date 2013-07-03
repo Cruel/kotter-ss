@@ -6,6 +6,7 @@ require_once('inc/ss_api.php');
 
 $db = new MyPDO();
 $mail = new SSMailer();
+$api = new AnchorAPI();
 
 extract($_GET, EXTR_SKIP);
 extract($_POST, EXTR_SKIP);
@@ -33,7 +34,7 @@ if (isset($agency, $email, $firstname, $lastname, $mobile, $mobileprovider)) {
 
         $id = $db->createUser($agency, $firstname, $lastname, $email, $auth, $mobile, $mobileprovider);
         if ($id){
-            $authlink = 'http'.(empty($_SERVER['HTTPS'])?'':'s').'://'.$_SERVER['HTTP_HOST'].$_SERVER['SCRIPT_NAME']."?".(isset($trial)?"trial&":"")."id=".$id."&verify=".$auth;
+            $authlink = 'http'.(empty($_SERVER['HTTPS'])?'':'s').'://'.$_SERVER['HTTP_HOST'].$_SERVER['SCRIPT_NAME']."?".(($trial=="true")?"trial&":"")."id=".$id."&verify=".$auth;
             $mail->setEmailFile("verification", array(
                 "firstname" => $firstname,
                 "lastname" => $lastname,
@@ -50,10 +51,9 @@ if (isset($agency, $email, $firstname, $lastname, $mobile, $mobileprovider)) {
 } else if (isset($id, $verify)){
     if ($db->verifyUser($id, $verify)){
         if (isset($trial)) {
-            $api = new AnchorAPI();
             $user = $db->getUser($id);
             $pass = MyPDO::genRandPassword();
-            $apiorg = $api->createOrganization($user['agency'], $user['email']);
+            $apiorg = $api->createOrganization($user['agency'], $user['email'], 0);
             if ($apiorg){
                 $apiuser = $api->createUser($apiorg['result']['id'], $user['firstname'], $user['lastname'], $user['email'], $pass, $user['mobile_provider_id'], $user['mobile']);
                 if ($apiuser){
@@ -66,7 +66,7 @@ if (isset($agency, $email, $firstname, $lastname, $mobile, $mobileprovider)) {
                         "buylink" => $buylink
                     ));
                     $mail->sendTo($user['email']);
-                    $success = "<h3>Success!</h3>Your email has been verified and account created. Your account password has been emailed to you. Please log in and change your password <a href=\"http://ss.kotter.net/\">here</a>.<br><br>Redirecting in 8 seconds...";
+                    $success = "<h3>Success!</h3>Your email has been verified and account created. Your account password has been emailed to you. Please log in <a href=\"http://ss.kotter.net/\">here</a>.<br><br>Redirecting in 8 seconds...";
                     $redirect = TRUE;
                 } else {
                     $error = "<h3>Sorry.</h3>There was a problem creating your user: \"".$api->errorMsg()."\" ".$support;
@@ -76,9 +76,8 @@ if (isset($agency, $email, $firstname, $lastname, $mobile, $mobileprovider)) {
             }
         } else {
             $success = "<h3>Success!</h3>Your email has been verified and the last step is to process payment below.";
-            if (isset($type)) {
+            if (isset($paymenttype)) {
                 require_once("buy.php");
-                $success = "<h3>Success!</h3>You won.";
             }
             $paymentRequired = TRUE;
         }
@@ -98,9 +97,10 @@ if (isset($json)) {
     $json = array(
         "success" => empty($error),
         "message" => empty($error) ? $success : $error,
-        "redirect" => "http://ss.kotter.net/",
         "redirectdelay" => 8000
     );
+    if (isset($redirect))
+        $json["redirect"] = "http://ss.kotter.net/";
     die(json_encode($json));
 }
 
@@ -110,7 +110,7 @@ if (isset($json)) {
 <html>
 <head>
 <?php
-    if ($redirect)
+    if (isset($redirect))
         echo '<meta http-equiv="refresh" content="8; url=http://ss.kotter.net/">';
 ?>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
@@ -168,11 +168,11 @@ if (isset($json)) {
         <form action="" id="payform" class="mainForm" method="post">
             <div class="formhead">
                 <h5 class="iUser">Pay</h5>
-                <!--select id="type" name="type">
+                <!--select id="paymenttype" name="paymenttype">
                     <option value="eft">eTransfer (Recommended)</option>
                     <option value="cc">Credit Card</option>
                 </select-->
-                <input id="type" name="type" type="hidden" value="cc" />
+                <input id="paymenttype" name="paymenttype" type="hidden" value="cc" />
             </div>
             <input name="id" type="hidden" value="<?php echo $id ?>" />
             <input name="verify" type="hidden" value="<?php echo $verify ?>" />
@@ -206,12 +206,12 @@ if (isset($json)) {
 
                     <div class="loginRow noborder">
                         <label for="cvv2"><a href="https://usaepay.com/cvv.htm" target="_blank">CVV2 / CID</a></label>
-                        <div class="loginInput"><input type="text" id="cvv2" name="cvv2" required /></div>
+                        <div class="loginInput"><input type="text" id="cvv2" name="cvv2" required maxlength="4" /></div>
                         <div class="fix"></div>
                     </div>
 
                     <div class="loginRow noborder">
-                        <label for="zip">Expiration:</label>
+                        <label for="zip">Expiration</label>
                         <div class="loginInput">
                             <select id="exp_month" name="exp_month">
                                 <option>01</option><option>02</option><option>03</option><option>04</option><option>05</option><option>06</option><option>07</option><option>08</option><option>09</option><option>10</option><option>11</option><option>12</option>
@@ -222,6 +222,39 @@ if (isset($json)) {
                                     for ($i = $year; $i < $year+10; $i++)
                                         echo "<option>$i</option>";
                                 ?>
+                            </select>
+                        </div>
+                        <div class="fix"></div>
+                    </div>
+
+                    <?php
+                        if (isset($id, $upgrade)){
+                            $user = $db->getUser($id);
+                            $count = $api->getOrganizationPersonCount($user['organization_id']);
+                            echo '<div class="plantip">You have '.$count." account".(($count==1)?'':'s')." on your trial.</div>";
+                            if ($count > 5) {
+                                $defaultplan = 3;
+                                echo '<div class="plantip">To accomodate your size, we suggest our Large Agency plan.</div>';
+                            } else if ($count > 2) {
+                                $defaultplan = 2;
+                                echo '<div class="plantip">To accomodate your size, we suggest our <em>Small Agency</em> plan.</div>';
+                            } else {
+                                $defaultplan = 0;
+                                echo '<div class="plantip">Any of our plans below will accomodate your size.</div>';
+                            }
+                            echo '<div class="plantip">Check our <a href="/pricing" target="_blank">pricing comparison chart</a> for details.</div>';
+                            echo '<script>var defaultplan='.$defaultplan.';</script>';
+                        }
+                    ?>
+
+                    <div class="loginRow noborder">
+                        <label for="plan">Plan Type</label>
+                        <div class="loginInput">
+                            <select id="plan" name="plan" required>
+                                <option disabled>Choose Your Plan</option>
+                                <option value="1">Pro User &dash; $20/month</option>
+                                <option value="2">Small Agency &dash; $50/month</option>
+                                <option value="3">Large Agency &dash; $99/month</option>
                             </select>
                         </div>
                         <div class="fix"></div>
@@ -251,6 +284,7 @@ if (isset($json)) {
                 </div>
 
                 <div class="loginRow">
+                    <!--span id="triallink"><a href="/">Start Free Trial Instead</a></span-->
                     <button id="submit" class="blueBtn submitForm">Pay</button>
                     <div class="fix"></div>
                 </div>
@@ -265,12 +299,6 @@ if (isset($json)) {
 
         <form action="<?php echo ((isset($target)) ? $target : "") ?>" id="signupform" class="mainForm" method="post">
             <fieldset>
-
-                <?php 
-                    if (isset($trial)){
-                        echo '<input name="trial" type="hidden" />';
-                    }
-                ?>
                 
                 <div class="loginRow noborder">
                     <label for="agency">Agency Name</label>
@@ -309,6 +337,39 @@ if (isset($json)) {
                     </div>
                     <div class="fix"></div>
                 </div>
+
+                <!--div class="loginRow noborder">
+                    <input type="checkbox" id="trial" name="trial" />
+                    <label id="triallabel" for="trial">15 Day Free Trial</label>
+                    <div class="fix"></div>
+                </div-->
+
+                <?php
+                    if (isset($target)) {
+                ?>
+
+                    <div class="loginRow noborder">
+                        <label for="plan">Plan Type</label>
+                        <div class="loginInput">
+                            <select id="plan" name="plan" required>
+                                <option disabled>Choose Your Plan</option>
+                                <option value="1">Pro User &dash; $20/month</option>
+                                <option value="2">Small Agency &dash; $50/month</option>
+                                <option value="3">Large Agency &dash; $99/month</option>
+                            </select>
+                        </div>
+                        <div class="fix"></div>
+                    </div>
+
+                <?php
+                    } else {
+                ?>
+                    <div class="loginRow noborder">
+                        <input id="trial" type="radio" name="trial" value="true" required><label id="triallabel" for="trial">15 Day Free Trial</label>
+                        <input id="buy" type="radio" name="trial" value="false" required><label id="buylabel" for="buy">Purchase Now</label>
+                        <div class="fix"></div>
+                    </div>
+                <?php } ?>
 
                 <div class="loginRow noborder">
                     <input type="checkbox" id="terms" name="terms" required />

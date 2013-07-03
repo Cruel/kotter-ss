@@ -1,8 +1,17 @@
 <?php
 
 // Config.php - SS_SERVER SS_USER SS_PASS
-require_once("config.php");
+require_once(dirname(__FILE__)."/config.php");
 define("SS_BASEURI", "/1/management");
+
+$policies = array(
+	//https://ss.kotter.net:510/1/management/policy/1/
+	//1024*1024*1024*200 = 214748364800
+	'{"space_quota": "214748364800", "max_file_size": "5120", "purge_deleted": true, "trim_revisions": false, "excluded_extensions": ".$$,.$db,.113,.3g2,.3gp,.3gp2,.3gpp,.3mm,.a,.abf,.abk,.afm,.ani,.ann,.asf,.avi,.avs,.bac,.bak,.bck,.bcm,.bdb,.bdf,.bkf,.bkp,.bmk,.bsc,.bsf,.cab,.cf1,.chm,.chq,.chw,.cnt,.com,.cpl,.cur,.dev,.dfont,.dll,.dmp,.drv,.dv,.dvd,.dvr,.dvr-ms,.eot,.evt,.exe,.ffa,.ffl,.ffo,.ffx,.flc,.flv,.fnt,.fon,.ftg,.fts,.fxp,.gid,.grp,.hdd,.hlp,.hxi,.hxq,.hxr,.hxs,.ico,.idb,.idx,.ilk,.img,.inf,.ini,.ins,.ipf,.iso,.isp,.its,.jar,.jse,.kbd,.kext,.key,.lex,.lib,.library-ms,.lnk,.log,.lwfn,.m1p,.m1v,.m2p,.m2v,.m4v,.mem,.mkv,.mov,.mp2,.mp2v,.mp4,.mpe,.mpeg,.mpg,.mpv,.mpv2,.msc,.msi,.msm,.msp,.mst,.ncb,.nt,.nvram,.o,.obj,.obs,.ocx,.old,.ost,.otf,.pch,.pf,.pfa,.pfb,.pfm,.pnf,.pol,.pref,.prf,.prg,.prn,.pvs,.pwl,.qt,.rdb,.reg,.rll,.rox,.sbr,.scf,.scr,.sdb,.shb,.suit,.swf,.swp,.sys,.theme,.tivo,.tmp,.tms,.ttc,.ttf,.v2i,.vbe,.vga,.vgd,.vhd,.video,.vmc,.vmdk,.vmsd,.vmsn,.vmx,.vxd,.win,.wpk", "user_purge_deleted": true, "user_create_shares": false, "purge_deleted_frequency": "90", "user_trim_revisions": true, "user_create_backups": true, "trim_revisions_x": ""}',
+	'{"space_quota": "21474836480", "max_file_size": "5120", "purge_deleted": true, "trim_revisions": false, "excluded_extensions": ".$$,.$db,.113,.3g2,.3gp,.3gp2,.3gpp,.3mm,.a,.abf,.abk,.afm,.ani,.ann,.asf,.avi,.avs,.bac,.bak,.bck,.bcm,.bdb,.bdf,.bkf,.bkp,.bmk,.bsc,.bsf,.cab,.cf1,.chm,.chq,.chw,.cnt,.com,.cpl,.cur,.dev,.dfont,.dll,.dmp,.drv,.dv,.dvd,.dvr,.dvr-ms,.eot,.evt,.exe,.ffa,.ffl,.ffo,.ffx,.flc,.flv,.fnt,.fon,.ftg,.fts,.fxp,.gid,.grp,.hdd,.hlp,.hxi,.hxq,.hxr,.hxs,.ico,.idb,.idx,.ilk,.img,.inf,.ini,.ins,.ipf,.iso,.isp,.its,.jar,.jse,.kbd,.kext,.key,.lex,.lib,.library-ms,.lnk,.log,.lwfn,.m1p,.m1v,.m2p,.m2v,.m4v,.mem,.mkv,.mov,.mp2,.mp2v,.mp4,.mpe,.mpeg,.mpg,.mpv,.mpv2,.msc,.msi,.msm,.msp,.mst,.ncb,.nt,.nvram,.o,.obj,.obs,.ocx,.old,.ost,.otf,.pch,.pf,.pfa,.pfb,.pfm,.pnf,.pol,.pref,.prf,.prg,.prn,.pvs,.pwl,.qt,.rdb,.reg,.rll,.rox,.sbr,.scf,.scr,.sdb,.shb,.suit,.swf,.swp,.sys,.theme,.tivo,.tmp,.tms,.ttc,.ttf,.v2i,.vbe,.vga,.vgd,.vhd,.video,.vmc,.vmdk,.vmsd,.vmsn,.vmx,.vxd,.win,.wpk", "user_purge_deleted": true, "user_create_shares": false, "purge_deleted_frequency": "90", "user_trim_revisions": true, "user_create_backups": true, "trim_revisions_x": ""}',
+	'{"space_quota": "53687091200", "max_file_size": "5120", "purge_deleted": true, "trim_revisions": false, "excluded_extensions": ".$$,.$db,.113,.3g2,.3gp,.3gp2,.3gpp,.3mm,.a,.abf,.abk,.afm,.ani,.ann,.asf,.avi,.avs,.bac,.bak,.bck,.bcm,.bdb,.bdf,.bkf,.bkp,.bmk,.bsc,.bsf,.cab,.cf1,.chm,.chq,.chw,.cnt,.com,.cpl,.cur,.dev,.dfont,.dll,.dmp,.drv,.dv,.dvd,.dvr,.dvr-ms,.eot,.evt,.exe,.ffa,.ffl,.ffo,.ffx,.flc,.flv,.fnt,.fon,.ftg,.fts,.fxp,.gid,.grp,.hdd,.hlp,.hxi,.hxq,.hxr,.hxs,.ico,.idb,.idx,.ilk,.img,.inf,.ini,.ins,.ipf,.iso,.isp,.its,.jar,.jse,.kbd,.kext,.key,.lex,.lib,.library-ms,.lnk,.log,.lwfn,.m1p,.m1v,.m2p,.m2v,.m4v,.mem,.mkv,.mov,.mp2,.mp2v,.mp4,.mpe,.mpeg,.mpg,.mpv,.mpv2,.msc,.msi,.msm,.msp,.mst,.ncb,.nt,.nvram,.o,.obj,.obs,.ocx,.old,.ost,.otf,.pch,.pf,.pfa,.pfb,.pfm,.pnf,.pol,.pref,.prf,.prg,.prn,.pvs,.pwl,.qt,.rdb,.reg,.rll,.rox,.sbr,.scf,.scr,.sdb,.shb,.suit,.swf,.swp,.sys,.theme,.tivo,.tmp,.tms,.ttc,.ttf,.v2i,.vbe,.vga,.vgd,.vhd,.video,.vmc,.vmdk,.vmsd,.vmsn,.vmx,.vxd,.win,.wpk", "user_purge_deleted": true, "user_create_shares": false, "purge_deleted_frequency": "90", "user_trim_revisions": true, "user_create_backups": true, "trim_revisions_x": ""}',
+	'{"space_quota": "214748364800", "max_file_size": "5120", "purge_deleted": true, "trim_revisions": false, "excluded_extensions": ".$$,.$db,.113,.3g2,.3gp,.3gp2,.3gpp,.3mm,.a,.abf,.abk,.afm,.ani,.ann,.asf,.avi,.avs,.bac,.bak,.bck,.bcm,.bdb,.bdf,.bkf,.bkp,.bmk,.bsc,.bsf,.cab,.cf1,.chm,.chq,.chw,.cnt,.com,.cpl,.cur,.dev,.dfont,.dll,.dmp,.drv,.dv,.dvd,.dvr,.dvr-ms,.eot,.evt,.exe,.ffa,.ffl,.ffo,.ffx,.flc,.flv,.fnt,.fon,.ftg,.fts,.fxp,.gid,.grp,.hdd,.hlp,.hxi,.hxq,.hxr,.hxs,.ico,.idb,.idx,.ilk,.img,.inf,.ini,.ins,.ipf,.iso,.isp,.its,.jar,.jse,.kbd,.kext,.key,.lex,.lib,.library-ms,.lnk,.log,.lwfn,.m1p,.m1v,.m2p,.m2v,.m4v,.mem,.mkv,.mov,.mp2,.mp2v,.mp4,.mpe,.mpeg,.mpg,.mpv,.mpv2,.msc,.msi,.msm,.msp,.mst,.ncb,.nt,.nvram,.o,.obj,.obs,.ocx,.old,.ost,.otf,.pch,.pf,.pfa,.pfb,.pfm,.pnf,.pol,.pref,.prf,.prg,.prn,.pvs,.pwl,.qt,.rdb,.reg,.rll,.rox,.sbr,.scf,.scr,.sdb,.shb,.suit,.swf,.swp,.sys,.theme,.tivo,.tmp,.tms,.ttc,.ttf,.v2i,.vbe,.vga,.vgd,.vhd,.video,.vmc,.vmdk,.vmsd,.vmsn,.vmx,.vxd,.win,.wpk", "user_purge_deleted": true, "user_create_shares": false, "purge_deleted_frequency": "90", "user_trim_revisions": true, "user_create_backups": true, "trim_revisions_x": ""}',
+);
 
 class AnchorAPI {
 
@@ -96,10 +105,10 @@ class AnchorAPI {
 		return $result;
 	}
 
-	public function createOrganization($name, $contact_email){
+	public function createOrganization($name, $contact_email, $policy_type){
+		global $policies;
 		$slug = AnchorAPI::slugify($name);
-		//https://ss.kotter.net:510/1/management/policy/1/
-		$policy = '{"space_quota": "536870912000", "max_file_size": "5120", "purge_deleted": true, "trim_revisions": false, "excluded_extensions": ".$$,.$db,.113,.3g2,.3gp,.3gp2,.3gpp,.3mm,.a,.abf,.abk,.afm,.ani,.ann,.asf,.avi,.avs,.bac,.bak,.bck,.bcm,.bdb,.bdf,.bkf,.bkp,.bmk,.bsc,.bsf,.cab,.cf1,.chm,.chq,.chw,.cnt,.com,.cpl,.cur,.dev,.dfont,.dll,.dmp,.drv,.dv,.dvd,.dvr,.dvr-ms,.eot,.evt,.exe,.ffa,.ffl,.ffo,.ffx,.flc,.flv,.fnt,.fon,.ftg,.fts,.fxp,.gid,.grp,.hdd,.hlp,.hxi,.hxq,.hxr,.hxs,.ico,.idb,.idx,.ilk,.img,.inf,.ini,.ins,.ipf,.iso,.isp,.its,.jar,.jse,.kbd,.kext,.key,.lex,.lib,.library-ms,.lnk,.log,.lwfn,.m1p,.m1v,.m2p,.m2v,.m4v,.mem,.mkv,.mov,.mp2,.mp2v,.mp4,.mpe,.mpeg,.mpg,.mpv,.mpv2,.msc,.msi,.msm,.msp,.mst,.ncb,.nt,.nvram,.o,.obj,.obs,.ocx,.old,.ost,.otf,.pch,.pf,.pfa,.pfb,.pfm,.pnf,.pol,.pref,.prf,.prg,.prn,.pvs,.pwl,.qt,.rdb,.reg,.rll,.rox,.sbr,.scf,.scr,.sdb,.shb,.suit,.swf,.swp,.sys,.theme,.tivo,.tmp,.tms,.ttc,.ttf,.v2i,.vbe,.vga,.vgd,.vhd,.video,.vmc,.vmdk,.vmsd,.vmsn,.vmx,.vxd,.win,.wpk", "user_purge_deleted": true, "user_create_shares": false, "purge_deleted_frequency": "90", "user_trim_revisions": true, "user_create_backups": true, "trim_revisions_x": ""}';
+		$policy = $policies[$policy_type];
 		$parent_id = 1;
 		$result = $this->apiRequest('/organization/create/', compact(
 			"name", "contact_email", "slug", "policy", "parent_id"
@@ -107,13 +116,14 @@ class AnchorAPI {
 		return $result;
 	}
 
-	// public function upgradeOrganization($id){
-	// 	$policy = FULL_POLICY;
-	// 	$result = $this->apiRequest('/organization/update/', compact(
-	// 		"id", "policy"
-	// 	));
-	// 	return $result;
-	// }
+	public function upgradeOrganization($id, $plan_id){
+		global $policies;
+		$policy = $policies[$plan_id];
+		$result = $this->apiRequest('/organization/update/', compact(
+			"id", "policy"
+		));
+		return $result;
+	}
 
 	public function deleteOrganization($id){
 		$result = $this->apiRequest('/organization/delete/', array('id'=>$id));
@@ -123,7 +133,6 @@ class AnchorAPI {
 	public function getOrganizationPersonCount($id){
 		$result = $this->apiRequest("/organization/".$id."/persons/");
 		return $result['result']['total_persons'];
-		// return $result;
 	}
 
 }

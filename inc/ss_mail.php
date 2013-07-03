@@ -1,8 +1,8 @@
 <?php
 
 // Config.php - MAIL_HOST MAIL_PORT MAIL_USER MAIL_PASS
-require_once("config.php");
-require_once('class.phpmailer.php');
+require_once(dirname(__FILE__)."/config.php");
+require_once(dirname(__FILE__).'/class.phpmailer.php');
 
 class SSMailer extends PHPMailer {
 
@@ -17,7 +17,7 @@ class SSMailer extends PHPMailer {
 		$this->Port       = MAIL_PORT;
 		$this->Username   = MAIL_USER;
 		$this->Password   = MAIL_PASS;
-		$this->SMTPSecure = 'tls';
+		$this->SMTPSecure = MAIL_SECURITY;
 
 		$this->From       = 'storeandshare@kotter.net';
 		$this->FromName   = 'Kotter Group';
@@ -54,7 +54,7 @@ class SSMailer extends PHPMailer {
 	public function setEmailFile($emailname, $variables){
 		extract($variables, EXTR_SKIP);
 		ob_start();
-		include "emails/$emailname/email.php";
+		include dirname(__FILE__)."/../emails/$emailname/email.php";
 		$this->Subject = $subject;
 		$this->Body = ob_get_clean();
 		foreach(glob("emails/$emailname/images/*.*") as $filename){

@@ -139,14 +139,28 @@ input.error { border: 1px dashed #F88;}
 input.error:hover, input.error:focus { border: 1px dashed #FAA;}
 select.error { outline: 1px dashed #F88;}
 
-#terms {
+select {
+	margin-top: 4px;
+}
+
+label[for=trial].error {
+	margin-top: 50px;
+}
+
+#cvv2 { 
+	width: 50px;
+}
+
+#terms, #trial, #buy {
 	width: auto;
-	margin: 6px 0 0 12px;
+	margin: 6px 0 0 10px;
 }
-#terms.error {
-	
+#trial, #buy {
+	float: left;
+	clear: left;
+	margin-bottom: 10px;
 }
-#termslabel{
+#termslabel, #triallabel, #buylabel{
 	float:right;
 	width:320px;
 	padding: 4px 5px;
@@ -184,4 +198,12 @@ select.error { outline: 1px dashed #F88;}
 	float: right;
 	width: 200px;
 	margin: 8px 8px;
+}
+
+#triallink {
+	margin-left: 10px;
+}
+
+.plantip {
+	padding-left: 10px;
 }
