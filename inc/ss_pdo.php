@@ -71,18 +71,19 @@ class MyPDO extends PDO {
 		return $stmt->fetchAll();
 	}
 
-	public function getUsersWeekendAdjusted(){
+	public function getUsersWeekendAdjusted($paid = NULL){
+		$whereclause = (is_null($paid)) ? '' : "WHERE paid=$paid";
 		$ret = array();
 		$time = time();
 		$oneday = 60*60*24;
-		foreach($this->query('SELECT *, UNIX_TIMESTAMP(created) as weekendcreated FROM users') as $user){
-			$weekendcreated = $user['weekendcreated'];
-			while ($weekendcreated < $time) {
-				$weekendcreated += $oneday;
-				if (date("N", $weekendcreated) > 5) {
-					$user['weekendcreated'] += $oneday;
-					$user['lastemailed'] += $oneday;
+		foreach($this->query('SELECT *, UNIX_TIMESTAMP(emailstarted) as weekendshave, UNIX_TIMESTAMP(lastemailed) AS lastemailedtime FROM users '.$whereclause) as $user){
+			$weekendshave = $user['weekendshave'];
+			while ($weekendshave < $time) {
+				if (date("N", $weekendshave) > 5) {
+					$user['weekendshave'] += $oneday;
+					$user['lastemailedtime'] += $oneday;
 				}
+				$weekendshave += $oneday;
 			}
 			$ret[] = $user;
 		}
